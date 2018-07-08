@@ -266,13 +266,15 @@ nav h1 a {
   text-transform: uppercase;
 	width: 90%;
 }
+
 #restaurant-container, #reviews-container {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 140px 40px 30px;
-  box-sizing: border-box;
   width: 50%;
+  box-sizing: border-box;
 }
+
 #reviews-container {
   padding: 30px 40px 80px;
 }
@@ -290,7 +292,7 @@ nav h1 a {
 }
 #reviews-list li {
   background-color: #fff;
-    border: 2px solid #f3f3f3;
+  border: 2px solid #f3f3f3;
   display: block;
   list-style-type: none;
   margin: 0 0 30px;
@@ -304,4 +306,53 @@ nav h1 a {
 }
 #restaurant-hours td {
   color: #666;
+}
+
+@media screen and (max-width: 800px) {
+  #breadcrumb {
+    padding: 10px 40px 16px;
+    list-style: none;
+    background-color: #eee;
+    font-size: 17px;
+    margin: 0;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .inside #map-container {
+    width: 100%;
+    position: relative;
+    right: auto;
+    top: 131px;
+    height: 500px;
+    z-index: 0;
+  }
+
+  #restaurant-container, #reviews-container {
+    width: 100%;
+    padding: 140px 40px 30px;
+    box-sizing: border-box;
+  }
+  #reviews-container {
+    padding: 30px 40px 80px;
+  }
+
+
+  .inside #footer {
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 500px) {
+
+  #restaurant-container, #reviews-container {
+    width: 100%;
+    padding: 140px 20px 30px;
+    box-sizing: border-box;
+  }
+  #reviews-container {
+    padding: 30px 20px 80px;
+  }
 }
