@@ -14,7 +14,7 @@
 
 <body class="inside">
   <!-- Beginning header -->
-  
+
   <header>
     <!-- Beginning nav -->
     <nav>
@@ -24,7 +24,7 @@
     </nav>
 
     <!-- Beginning breadcrumb -->
-    <ul id="breadcrumb">
+    <ul id="breadcrumb" aria-label="breadcrumb">
       <li>
         <a href="/">Home</a>
       </li>
@@ -34,22 +34,23 @@
     <!-- End nav -->
   </header>
   <!-- End header -->
-  
+
 
   <!-- Beginning main -->
   <main id="maincontent">
     <!-- Beginning map -->
     <section id="map-container">
-      <div id="map"></div>
+      <div id="map" aria-label="map"></div>
     </section>
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
       <h1 id="restaurant-name"></h1>
-      <img id="restaurant-img">
+      <img id="restaurant-img" />
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
-      <table id="restaurant-hours"></table>
+      <table id="restaurant-hours">
+      </table>
     </section>
     <!-- end restaurant -->
     <!-- Beginning reviews -->
