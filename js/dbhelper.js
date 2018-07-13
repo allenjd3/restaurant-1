@@ -11,15 +11,80 @@ class DBHelper {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
+  static createDb(store) {
+    var dbPromise = idb.open('restaurant-store', 1, upgradeDB => {
+      upgradeDB.createObjectStore(store, { keypath: 'id' });
+    });
 
+    const idbKeyval = {
+      get(key) {
+        return dbPromise.then(db => {
+          return db.transaction(store)
+            .objectStore(store).get(key);
+        });
+      },
+      set(key, val) {
+        return dbPromise.then(db => {
+          const tx = db.transaction(store, 'readwrite');
+          tx.objectStore(store).put(val, key);
+          return tx.complete;
+        });
+      },
+      delete(key) {
+        return dbPromise.then(db => {
+          const tx = db.transaction(store, 'readwrite');
+          tx.objectStore(store).delete(key);
+          return tx.complete;
+        });
+      },
+      clear() {
+        return dbPromise.then(db => {
+          const tx = db.transaction(store, 'readwrite');
+          tx.objectStore(store).clear();
+          return tx.complete;
+        });
+      },
+      keys() {
+        return dbPromise.then(db => {
+          const tx = db.transaction(store);
+          const keys = [];
+          const store = tx.objectStore(store);
+
+          // This would be store.getAllKeys(), but it isn't supported by Edge or Safari.
+          // openKeyCursor isn't supported by Safari, so we fall back
+          (store.iterateKeyCursor || store.iterateCursor).call(store, cursor => {
+            if (!cursor) return;
+            keys.push(cursor.key);
+            cursor.continue();
+          });
+
+          return tx.complete.then(() => keys);
+        });
+      }
+    }
+    return idbKeyval;
+
+  }
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    fetch(DBHelper.DATABASE_URL)
+    var idbPromise = DBHelper.createDb('restaurants');
+    idbPromise.get('restaurants').then(val => {
+      if(val) {
+        callback(null, val)
+      }
+      else {
+        fetch(DBHelper.DATABASE_URL)
         .then(response => response.json())
-        .then(res => callback(null,res))
-        .catch(e => callback(error, null));
+        .then(res => {
+          idbPromise.set('restaurants', res);
+          callback(null, res);
+        })
+        .catch(e => callback(e, null));
+      }
+    });
+
   }
 
   /**
@@ -27,10 +92,25 @@ class DBHelper {
    */
   static fetchRestaurantById(id, callback) {
     // fetch all restaurants with proper error handling.
-    fetch(DBHelper.DATABASE_URL + '/' + id)
+    // fetch all restaurants with proper error handling.
+    var idbPromise = DBHelper.createDb('restaurants');
+    idbPromise.get('restaurantsById').then(val => {
+      if(val) {
+        callback(null, val)
+      }
+      else {
+        fetch(DBHelper.DATABASE_URL + '/' + id)
         .then(res => res.json())
-        .then(res => callback(null, res))
+        .then(res => {
+          idbPromise.set('restaurantsById', res);
+          callback(null, res);
+        })
         .catch(e => callback(e, null));
+      }
+    });
+
+
+
   }
 
   /**
@@ -139,16 +219,17 @@ class DBHelper {
   /**
    * Map marker for a restaurant.
    */
-   static mapMarkerForRestaurant(restaurant, map) {
+  static mapMarkerForRestaurant(restaurant, map) {
     // https://leafletjs.com/reference-1.3.0.html#marker  
     const marker = new L.marker([restaurant.latlng.lat, restaurant.latlng.lng],
-      {title: restaurant.name,
-      alt: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant)
+      {
+        title: restaurant.name,
+        alt: restaurant.name,
+        url: DBHelper.urlForRestaurant(restaurant)
       })
-      marker.addTo(newMap);
+    marker.addTo(newMap);
     return marker;
-  } 
+  }
   /* static mapMarkerForRestaurant(restaurant, map) {
     const marker = new google.maps.Marker({
       position: restaurant.latlng,
