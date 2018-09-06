@@ -98,7 +98,7 @@ class DBHelper {
     // fetch all restaurants with proper error handling.
     // fetch all restaurants with proper error handling.
     var idbPromise = DBHelper.createDb('restaurants');
-    idbPromise.get('restaurantsById').then(val => {
+    idbPromise.get(`restaurantsById-${id}`).then(val => {
       if(val) {
         callback(null, val)
       }
@@ -106,7 +106,7 @@ class DBHelper {
         fetch(DBHelper.DATABASE_URL + '/' + id)
         .then(res => res.json())
         .then(res => {
-          idbPromise.set('restaurantsById', res);
+          idbPromise.set(`restaurantsById-${id}`, res);
           callback(null, res);
         })
         .catch(e => callback(e, null));
@@ -119,7 +119,7 @@ class DBHelper {
 
   static fetchReviewsByRestaurantId(id, callback) {
     var idbPromise = DBHelper.createDb('restaurants');
-    idbPromise.get('reviewsByRestaurantId').then(val => {
+    idbPromise.get(`reviewsByRestaurantId-${id}`).then(val => {
       if(val) {
         callback(null, val)
       }
@@ -128,7 +128,7 @@ class DBHelper {
         fetch(DBHelper.BASE_URL + '/reviews/?restaurant_id=' + id)
           .then(res => res.json())
           .then(res => {
-            idbPromise.set('reviewsByRestaurantId', res);
+            idbPromise.set(`reviewsByRestaurantId-${id}`, res);
             
             callback(null, res);
           })
@@ -137,13 +137,13 @@ class DBHelper {
     })
   }
 
-  static addReviewToCache(review) {
+  static addReviewToCache(review, restaurant_id) {
     var idbPromise = DBHelper.createDb('restaurants');
-    idbPromise.get('reviewsByRestaurantId').then(val => {
+    idbPromise.get(`reviewsByRestaurantId-${restaurant_id}`).then(val => {
         if(val) {
           val.push(review);
 
-          idbPromise.set('reviewsByRestaurantId', val);
+          idbPromise.set(`reviewsByRestaurantId-${restaurant_id}`, val);
 
 
         }
@@ -270,16 +270,6 @@ class DBHelper {
     marker.addTo(newMap);
     return marker;
   }
-  /* static mapMarkerForRestaurant(restaurant, map) {
-    const marker = new google.maps.Marker({
-      position: restaurant.latlng,
-      title: restaurant.name,
-      url: DBHelper.urlForRestaurant(restaurant),
-      map: map,
-      animation: google.maps.Animation.DROP}
-    );
-    return marker;
-  } */
 
 }
 

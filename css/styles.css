@@ -237,6 +237,35 @@ nav h1 a {
   position: absolute;
   width: 50%;
 }
+.radio_item {
+  position: absolute;
+  left: -10000px;
+}
+
+.review-star {
+opacity: 0.3;
+}
+
+.review-star > img {
+  width: 32px;
+  height: 32px;
+}
+
+.radio_item:checked + label {
+  opacity: 1;
+}
+
+.rating-stars img {
+  width: 20px;
+  height: 20px;
+}
+
+#review-form label.review-star{
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+}
+
 #restaurant-name {
   color: #f18200;
   font-family: Arial,sans-serif;
@@ -273,6 +302,32 @@ nav h1 a {
   padding: 140px 40px 30px;
   width: 50%;
   box-sizing: border-box;
+}
+#review-form > div {
+  margin: 10px 0px;
+}
+#review-form input[type=text] {
+  width: 100%;
+  border: 1px solid #666;
+  padding: 0.8em;
+}
+#review-form textarea {
+  width: 100%;
+  height: 3em;
+  border: 1px solid #666;
+  padding: 10px;
+}
+#review-submit {
+  background-color: orange;
+  border-bottom: 3px solid #eee;
+  color: #fff;
+  display: inline-block;
+  font-size: 10pt;
+  margin: 15px 0 0;
+  padding: 8px 30px 10px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
 #reviews-container {

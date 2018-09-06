@@ -1,13 +1,12 @@
 let restaurant;
 let reviews;
 var newMap;
-let id;
+
 
 /**
  * Initialize map as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {  
-  self.id = getParameterByName('id');
   fetchReviewsByRestaurantId();
   initMap();
 
@@ -40,21 +39,6 @@ initMap = () => {
   });
 }  
  
-/* window.initMap = () => {
-  fetchRestaurantFromURL((error, restaurant) => {
-    if (error) { // Got an error!
-      console.error(error);
-    } else {
-      self.map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: restaurant.latlng,
-        scrollwheel: false
-      });
-      fillBreadcrumb();
-      DBHelper.mapMarkerForRestaurant(self.restaurant, self.map);
-    }
-  });
-} */
 
 /**
  * Get current restaurant from page URL.
@@ -65,11 +49,12 @@ fetchRestaurantFromURL = (callback) => {
     return;
   }
 
-  if (!self.id) { // no id found in URL
+  if (!getParameterByName('id')) { // no id found in URL
     error = 'No restaurant id in URL'
     callback(error, null);
   } else {
-    DBHelper.fetchRestaurantById(self.id, (error, restaurant) => {
+    let id = getParameterByName('id');
+    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
       self.restaurant = restaurant;
       if (!restaurant) {
         console.error(error);
@@ -82,7 +67,8 @@ fetchRestaurantFromURL = (callback) => {
   }
 }
 
-fetchReviewsByRestaurantId = (id = self.id) => {
+
+fetchReviewsByRestaurantId = (id = getParameterByName('id')) => {
   DBHelper.fetchReviewsByRestaurantId(id, (error, reviews) => {
       
     self.reviews = reviews;
@@ -178,11 +164,35 @@ createReviewHTML = (review) => {
   li.appendChild(name);
 
   const date = document.createElement('p');
-  date.innerHTML = new Date(review.createdAt);
+  myDate = new Date(review.createdAt);
+  date.innerHTML = `Posted: ${(myDate.getMonth() + 1)}/${myDate.getDate()}/${myDate.getFullYear()} at ${myDate.getHours()}:${myDate.getMinutes()}`
+  
+  
+  
   li.appendChild(date);
 
   const rating = document.createElement('p');
-  rating.innerHTML = `Rating: ${review.rating}`;
+  rating.setAttribute('class', 'rating-stars');
+  switch(Number(review.rating)) {
+    case 1: 
+      rating.innerHTML = `<img src="./lib/star_1.svg" alt="1 star" />`;
+      break;
+    case 2:
+      rating.innerHTML = `<img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" />`;
+      break;
+    case 3:
+      rating.innerHTML = `<img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" />`;
+      break;
+    case 4:
+      rating.innerHTML = `<img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" />`;
+      break;
+    case 5:
+      rating.innerHTML = `<img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" /> <img src="./lib/star_1.svg" alt="1 star" />`;
+      break;
+    default:
+      rating.innerHTML = `There was a problem`;
+  }
+  
   li.appendChild(rating);
 
   const comments = document.createElement('p');
@@ -192,20 +202,41 @@ createReviewHTML = (review) => {
   return li;
 }
 
+
+var radios = document.forms["reviewForm"].elements["rating"];
+for(var i = 0, max = radios.length; i < max; i++) {
+    radios[i].onclick = function() {
+        let rev = document.getElementsByClassName('review-star')
+        for (var i = 0; i < rev.length; i++) {
+          rev[i].style.opacity = 0.3; 
+        }
+        this.nextElementSibling.style.opacity = 1;
+        prevAll(this);
+    }
+}
+
+prevAll = (element) => {
+  while (element = element.previousElementSibling)
+      element.style.opacity = 1;
+  return;
+}
+
 const form = document.forms.namedItem('reviewForm');
 form.addEventListener('submit', (e) => {
   e.preventDefault();
   const id = getParameterByName('id');
   const data = new FormData(form);
   data.append('restaurant_id', parseInt(id));
+
+  // data.append('rating',starRating1.getRating());
   fetch(`${DBHelper.BASE_URL}/reviews`, {method:'POST', body: data})
     .then(res => res.json())
     .then(response => {
       const ul = document.getElementById('reviews-list');
       ul.appendChild(createReviewHTML(response));
       location.href = `#review-${response.id}`
-      DBHelper.addReviewToCache(response);
-      
+      DBHelper.addReviewToCache(response, id);
+      document.getElementById('review-form').reset();
     })
     .catch(message=> console.log(message));
 });

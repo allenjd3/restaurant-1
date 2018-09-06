@@ -58,21 +58,29 @@
     <!-- Beginning reviews -->
     <section id="reviews-container">
         <h2>Create Review</h2>
-        <form enctype="multipart/form-data" name="reviewForm" method="POST">
+        <form id="review-form" enctype="multipart/form-data" name="reviewForm" method="POST">
           <div>
             <label>Name</label>
             <input type="text" name="name" />
           </div>
           <div>
-            <label>Rating</label> <br>
-            <input type="text" name="rating" />
+            <input id="radio1" type="radio" class="radio_item" name="rating" value="1" />
+            <label class="review-star" for="radio1"><img src="./lib/star_1.svg" alt="1 star" /></label>
+            <input id="radio2" type="radio" class="radio_item" name="rating" value="2" />
+            <label class="review-star" for="radio2"><img src="./lib/star_1.svg" alt="2 star" /></label>
+            <input id="radio3" type="radio" class="radio_item" name="rating" value="3" />
+            <label class="review-star" for="radio3"><img src="./lib/star_1.svg" alt="3 star" /></label>
+            <input id="radio4" type="radio" class="radio_item" name="rating" value="4" />
+            <label class="review-star" for="radio4"><img src="./lib/star_1.svg" alt="4 star" /></label>
+            <input id="radio5" type="radio" class="radio_item" name="rating" value="5" />
+            <label class="review-star" for="radio5"><img src="./lib/star_1.svg" alt="5 star" /></label>
           </div>
           <div>
             <label>Comments</label>
             <textarea name="comments"></textarea>
           </div>
           <div>
-            <input type="submit" name="submit" value="Submit Review"/>
+            <input id="review-submit" type="submit" name="submit" value="Submit Review"/>
           </div>
         </form>
       <ul id="reviews-list"></ul>
@@ -111,5 +119,6 @@
       .then(function () { console.log("Service Worker Registered"); });
   }
 </script>
+
 
 </html>
