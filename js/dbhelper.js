@@ -7,9 +7,13 @@ class DBHelper {
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
-  static get DATABASE_URL() {
+  static get BASE_URL() {
     const port = 1337 // Change this to your server port
-    return `http://localhost:${port}/restaurants`;
+    return `http://localhost:${port}`;
+  }
+  static get DATABASE_URL() {
+    
+    return `${DBHelper.BASE_URL}/restaurants`;
   }
   static createDb(store) {
     var dbPromise = idb.open('restaurant-store', 1, upgradeDB => {
@@ -111,6 +115,42 @@ class DBHelper {
 
 
 
+  }
+
+  static fetchReviewsByRestaurantId(id, callback) {
+    var idbPromise = DBHelper.createDb('restaurants');
+    idbPromise.get('reviewsByRestaurantId').then(val => {
+      if(val) {
+        callback(null, val)
+      }
+      else {
+
+        fetch(DBHelper.BASE_URL + '/reviews/?restaurant_id=' + id)
+          .then(res => res.json())
+          .then(res => {
+            idbPromise.set('reviewsByRestaurantId', res);
+            
+            callback(null, res);
+          })
+          .catch(e => callback(e, null));
+      }
+    })
+  }
+
+  static addReviewToCache(review) {
+    var idbPromise = DBHelper.createDb('restaurants');
+    idbPromise.get('reviewsByRestaurantId').then(val => {
+        if(val) {
+          val.push(review);
+
+          idbPromise.set('reviewsByRestaurantId', val);
+
+
+        }
+        else {
+          console.error(`That review didn't work right...`)
+        }
+      })
   }
 
   /**

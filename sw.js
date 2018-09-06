@@ -1,6 +1,6 @@
 self.addEventListener('install', function(event) {
     event.waitUntil(
-      caches.open('at-restaurant-v2').then(function(cache) {
+      caches.open('at-restaurant-v3').then(function(cache) {
         return cache.addAll(
           [
             '/',
@@ -33,7 +33,8 @@ self.addEventListener('install', function(event) {
       caches.match(event.request)
         .then(function(response) {
           // Cache hit - return response
-          if (response) {
+          
+          if (response && response != 'reviewsByRestaurantId') {
             return response;
           }
   
@@ -55,10 +56,12 @@ self.addEventListener('install', function(event) {
               // as well as the cache consuming the response, we need
               // to clone it so we have two streams.
               var responseToCache = response.clone();
-  
-              caches.open('at-restaurant-v2')
+
+              caches.open('at-restaurant-v3')
                 .then(function(cache) {
+
                   cache.put(event.request, responseToCache);
+                  
                 });
   
               return response;

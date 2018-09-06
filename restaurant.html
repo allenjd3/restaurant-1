@@ -57,9 +57,29 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="reviews-container">
+        <h2>Create Review</h2>
+        <form enctype="multipart/form-data" name="reviewForm" method="POST">
+          <div>
+            <label>Name</label>
+            <input type="text" name="name" />
+          </div>
+          <div>
+            <label>Rating</label> <br>
+            <input type="text" name="rating" />
+          </div>
+          <div>
+            <label>Comments</label>
+            <textarea name="comments"></textarea>
+          </div>
+          <div>
+            <input type="submit" name="submit" value="Submit Review"/>
+          </div>
+        </form>
       <ul id="reviews-list"></ul>
+      
     </section>
     <!-- End reviews -->
+    
   </main>
   <!-- End main -->
 
