@@ -1,6 +1,8 @@
 /**
  * Common database helper functions.
  */
+
+
 class DBHelper {
 
   /**
@@ -89,6 +91,47 @@ class DBHelper {
       }
     });
 
+  }
+
+  static offlineForm(formData) {
+    var idbPromise = DBHelper.createDb('restaurants');
+    
+    idbPromise.get('offlineForm').then((val)=>{
+      let dbArray = [];
+      dbArray = val;
+      dbArray.push(formData);
+      idbPromise.set('offlineForm', dbArray);
+    }).catch((e)=>{
+      let dbArray = [];
+      dbArray.push(formData);
+      idbPromise.set('offlineForm', dbArray);
+    });
+    
+
+  }
+
+  static onlineForm() {
+    var idbPromise = DBHelper.createDb('restaurants');
+    
+    idbPromise.get('offlineForm').then(vals => {
+      if(vals) {
+        vals.forEach((val)=>{
+          
+          fetch(`${DBHelper.BASE_URL}/reviews`, {method:'POST', body: JSON.stringify(val)})
+          .then(res => res.json())
+          .then(response => {
+            
+          })
+          .catch(message=> console.log(message));
+         })
+        idbPromise.delete('offlineForm');
+        
+        
+      }
+      else {
+        return;
+      }
+    })
   }
 
   /**

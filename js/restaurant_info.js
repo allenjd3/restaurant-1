@@ -9,7 +9,9 @@ var newMap;
 document.addEventListener('DOMContentLoaded', (event) => {  
   fetchReviewsByRestaurantId();
   initMap();
-
+  if(navigator.onLine){
+    DBHelper.onlineForm();
+  }
 });
 
 /**
@@ -228,8 +230,14 @@ form.addEventListener('submit', (e) => {
   const data = new FormData(form);
   data.append('restaurant_id', parseInt(id));
 
+  let dataObj = {};
+  data.forEach((val, key) => {
+    dataObj[key] = val;
+  });
+
   // data.append('rating',starRating1.getRating());
-  fetch(`${DBHelper.BASE_URL}/reviews`, {method:'POST', body: data})
+  if(navigator.onLine) {
+    fetch(`${DBHelper.BASE_URL}/reviews`, {method:'POST', body: data})
     .then(res => res.json())
     .then(response => {
       const ul = document.getElementById('reviews-list');
@@ -239,7 +247,20 @@ form.addEventListener('submit', (e) => {
       document.getElementById('review-form').reset();
     })
     .catch(message=> console.log(message));
+  }
+  else {
+    const ul = document.getElementById('reviews-list');
+    dataObj.id = (Math.random()*10000) + 4999;
+    dataObj.createdAt = new Date(Date.now());
+    ul.appendChild(createReviewHTML(dataObj));
+    location.href = `#review-${dataObj.id}`
+    DBHelper.addReviewToCache(dataObj, id)
+    DBHelper.offlineForm(dataObj);
+    document.getElementById('review-form').reset();
+  }
+  
 });
+
 
 
 

@@ -33,6 +33,11 @@ self.addEventListener('install', function(event) {
       caches.match(event.request)
         .then(function(response) {
           // Cache hit - return response
+          
+          if (response && response != 'reviewsByRestaurantId') {
+            return response;
+          }
+  
           // IMPORTANT: Clone the request. A request is a stream and
           // can only be consumed once. Since we are consuming this
           // once by cache and once by the browser for fetch, we need
