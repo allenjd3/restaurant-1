@@ -109,6 +109,22 @@ class DBHelper {
     
 
   }
+  static offlineFavorite(fav) {
+    var idbPromise = DBHelper.createDb('restaurants');
+    
+    idbPromise.get('offlineFavorite').then((val)=>{
+      let dbArray = [];
+      dbArray = val;
+      dbArray.push(fav);
+      idbPromise.set('offlineFavorite', dbArray);
+    }).catch((e)=>{
+      let dbArray = [];
+      dbArray.push(fav);
+      idbPromise.set('offlineFavorite', dbArray);
+    });
+    
+
+  }
 
   static onlineForm() {
     var idbPromise = DBHelper.createDb('restaurants');
@@ -125,6 +141,45 @@ class DBHelper {
           .catch(message=> console.log(message));
          })
         idbPromise.delete('offlineForm');
+        
+        
+      }
+      else {
+        return;
+      }
+    })
+  }
+
+  static onlineFavorite(id) {
+    var idbPromise = DBHelper.createDb('restaurants');
+    
+    idbPromise.get('offlineFavorite').then(vals => {
+      if(vals) {
+
+        vals.forEach((val)=>{
+
+          console.log(val.is_favorite);
+          if(val.is_favorite == 'true') {
+            fetch(`${DBHelper.BASE_URL}/restaurants/${id}/?is_favorite=true`, {method:'POST'})
+              .then(res=>res.json())
+              .then(response => {})
+              .catch((e)=>{
+                console.error(e);
+              })
+          }
+          else {
+            fetch(`${DBHelper.BASE_URL}/restaurants/${id}/?is_favorite=false`, {method:'POST'})
+              .then(res=>res.json())
+              .then(response => {
+                
+              })
+              .catch((e)=>{
+                console.error(e);
+              })
+          }
+          
+         })
+        idbPromise.delete('offlineFavorite');
         
         
       }
@@ -313,6 +368,21 @@ class DBHelper {
     marker.addTo(newMap);
     return marker;
   }
+
+  static resetFavorite(res, id) {
+    var idbPromise = DBHelper.createDb('restaurants');
+    idbPromise.get(`restaurantsById-${id}`).then(val => {
+        if(val) {
+          idbPromise.set(`restaurantsById-${id}`, res);
+
+        }
+        else {
+          console.error(`That didn't work right...`)
+        }
+      })
+  }
+
+  
 
 }
 

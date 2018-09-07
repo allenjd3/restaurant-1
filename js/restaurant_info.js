@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
   initMap();
   if(navigator.onLine){
     DBHelper.onlineForm();
+    DBHelper.onlineFavorite(getParameterByName('id'));
   }
 });
 
@@ -87,6 +88,15 @@ fetchReviewsByRestaurantId = (id = getParameterByName('id')) => {
  */
 fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
+  const toggleFavorite = document.getElementById('favorite-toggle');
+  if(restaurant.is_favorite == 'true') {
+    toggleFavorite.setAttribute('checked','true');
+    toggleFavorite.setAttribute('data-favorited','true');
+  }
+  else {
+    toggleFavorite.removeAttribute('checked');
+    toggleFavorite.setAttribute('data-favorited','false');
+  }
   name.innerHTML = restaurant.name;
 
   const address = document.getElementById('restaurant-address');
@@ -290,3 +300,55 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+const toggleFavorite = document.getElementById('favorite-toggle');
+
+toggleFavorite.addEventListener('click', (e)=>{
+  const id = getParameterByName('id');
+  if(navigator.onLine) {
+    
+    if(toggleFavorite.dataset.favorited == 'true'){
+      fetch(`${DBHelper.BASE_URL}/restaurants/${id}/?is_favorite=false`, {method:'POST'})
+        .then(res=>res.json())
+        .then(response => {
+          DBHelper.resetFavorite(response, id);
+            
+        })
+        .catch((e)=>{
+          console.error(e);
+        })
+    }
+    else {
+      fetch(`${DBHelper.BASE_URL}/restaurants/${id}/?is_favorite=true`, {method:'POST'})
+        .then(res=>res.json())
+        .then(response => {
+          DBHelper.resetFavorite(response, id);
+        })
+        .catch((e)=>{
+          console.error(e);
+        })
+    }
+  }
+  else {
+    
+    DBHelper.fetchRestaurantById(id, (error, restaurant) => {
+      
+      if (!restaurant) {
+        console.error(error);
+        return;
+      }
+      if(toggleFavorite.dataset.favorited == 'true'){
+        restaurant.is_favorite = 'false'
+        DBHelper.resetFavorite(restaurant, id);
+        DBHelper.offlineFavorite(restaurant);
+      }
+      else {
+        restaurant.is_favorite = 'true'
+        DBHelper.resetFavorite(restaurant, id);
+        DBHelper.offlineFavorite(restaurant);
+      }
+      
+    });
+    
+  }
+});

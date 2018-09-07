@@ -88,6 +88,9 @@ nav h1 a {
   letter-spacing: 10px;
   text-transform: uppercase;
 }
+.b {
+  font-weight: bold;
+}
 #breadcrumb {
     padding: 10px 40px 16px;
     list-style: none;
@@ -153,6 +156,16 @@ nav h1 a {
   margin: 10px;
   padding: 0 10px;
   width: 200px;
+}
+
+#favorite-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#favorite-container p {
+  margin-left: 10px;
 }
 
 
@@ -303,6 +316,14 @@ opacity: 0.3;
   width: 50%;
   box-sizing: border-box;
 }
+
+#favorite-container {
+  border-bottom: 1px solid #d9d9d9;
+  border-top: 1px solid #fff;
+  padding: 0px 40px;
+  width: 50%;
+  box-sizing: border-box;
+}
 #review-form > div {
   margin: 10px 0px;
 }
@@ -363,6 +384,62 @@ opacity: 0.3;
   color: #666;
 }
 
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {display:none;}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
 @media screen and (max-width: 800px) {
   #breadcrumb {
     padding: 10px 40px 16px;
@@ -388,6 +465,12 @@ opacity: 0.3;
     padding: 140px 40px 30px;
     box-sizing: border-box;
   }
+
+  #favorite-container {
+    width: 100%;
+    padding: 0px 40px;
+    box-sizing: border-box;
+  }
   #reviews-container {
     padding: 30px 40px 80px;
   }
@@ -405,6 +488,11 @@ opacity: 0.3;
   #restaurant-container, #reviews-container {
     width: 100%;
     padding: 140px 20px 30px;
+    box-sizing: border-box;
+  }
+  #favorite-container {
+    width: 100%;
+    padding: 0px 40px;
     box-sizing: border-box;
   }
   #reviews-container {
