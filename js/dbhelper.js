@@ -383,6 +383,20 @@ class DBHelper {
           console.error(`That didn't work right...`)
         }
       })
+    idbPromise.get('restaurants').then(vals=>{
+        if(vals) {
+          vals.forEach((value, i)=>{
+            if(value.id == id) {
+              vals.splice(i,1);
+              vals.push(res);
+            }
+          });
+          idbPromise.set('restaurants', vals);
+        }
+        else {
+          console.error(`That didn't work right...`);
+        }
+    })
   }
 
   
