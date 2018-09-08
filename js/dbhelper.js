@@ -394,7 +394,7 @@ class DBHelper {
           idbPromise.set('restaurants', vals);
         }
         else {
-          console.error(`That didn't work right...`);
+          
         }
     })
   }
