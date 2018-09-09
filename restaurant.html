@@ -57,38 +57,43 @@
     <!-- end restaurant -->
     <!-- Beginning reviews -->
     <section id="favorite-container">
-          
-            <label class="switch">
-                <input id="favorite-toggle" type="checkbox" checked>
+          <form>
+            <label for="favorite-toggle" class="switch">
+                <input id="favorite-toggle" type="checkbox" aria-label="favorite this restaurant?" checked>
                 <span class="slider round"></span>
               </label>
-          
+          </form>
           
       <p><span class="b">Favorite this restaurant</span></p>
       
     </section>
     <section id="reviews-container">
-        <h2>Create Review</h2>
-        <form id="review-form" enctype="multipart/form-data" name="reviewForm" method="POST">
+        <h2 id="create-review">Create Review</h2>
+        <form aria-labelledby="create-review" role="form" id="review-form" enctype="multipart/form-data" name="reviewForm" method="POST">
           <div>
-            <label>Name</label>
-            <input type="text" name="name" />
+            <label for="name">Name</label>
+            <input id="name" type="text" name="name" />
           </div>
           <div>
+            <!--One Star-->
             <input id="radio1" type="radio" class="radio_item" name="rating" value="1" />
             <label class="review-star" for="radio1"><img src="./lib/star_1.svg" alt="1 star" /></label>
+            <!--Two Stars-->
             <input id="radio2" type="radio" class="radio_item" name="rating" value="2" />
             <label class="review-star" for="radio2"><img src="./lib/star_1.svg" alt="2 star" /></label>
+            <!--Three Stars-->
             <input id="radio3" type="radio" class="radio_item" name="rating" value="3" />
             <label class="review-star" for="radio3"><img src="./lib/star_1.svg" alt="3 star" /></label>
+            <!--Four Stars-->
             <input id="radio4" type="radio" class="radio_item" name="rating" value="4" />
             <label class="review-star" for="radio4"><img src="./lib/star_1.svg" alt="4 star" /></label>
+            <!--Five Stars-->
             <input id="radio5" type="radio" class="radio_item" name="rating" value="5" />
             <label class="review-star" for="radio5"><img src="./lib/star_1.svg" alt="5 star" /></label>
           </div>
           <div>
-            <label>Comments</label>
-            <textarea name="comments"></textarea>
+            <label for="comments">Comments</label>
+            <textarea id="comments" name="comments"></textarea>
           </div>
           <div>
             <input id="review-submit" type="submit" name="submit" value="Submit Review"/>
@@ -111,13 +116,13 @@
   </footer>
   <!-- End footer -->
   <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw=="
-    crossorigin=""></script>
+    crossorigin=""></script> 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
-  <script type="application/javascript" charset="utf-8" src="js/idb.js"></script>
-  <script type="text/javascript" src="js/dbhelper.js"></script>
+  <script type="application/javascript" charset="utf-8" src="js/idb-min.js"></script>
+  <script type="text/javascript" src="js/dbhelper-min.js"></script>
   <!-- Main javascript file -->
-  <script type="text/javascript" src="js/restaurant_info.js"></script>
+  <script type="text/javascript" src="js/restaurant_info-min.js"></script>
   <!-- Google Maps -->
   <!--  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA_tKbW6A5pQ-eupxI56myUnHLqYCzOjKo&libraries=places&callback=initMap"></script> -->
   <!-- End scripts -->
